@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>幸運物 · 神秘之湖</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- 背景粒子層 -->
+  <div class="bg-particles" id="bgParticles"></div>
+
+  <!-- 湖面 Canvas（全螢幕背景） -->
+  <canvas id="lakeCanvas"></canvas>
+
+  <!-- 主要內容 -->
+  <main class="container">
+    <header class="site-header">
+      <h1 class="title">
+        <span class="title-icon">🌊</span>
+        神秘之湖幸運物
+        <span class="title-icon">✨</span>
+      </h1>
+      <p class="subtitle">將願望投入湖中，幸運物將回應你的呼喚</p>
+    </header>
+
+    <!-- 幸運物卡片區 -->
+    <section class="lucky-grid">
+
+      <div class="lucky-card" data-element="water" data-lucky="💎">
+        <div class="card-inner">
+          <div class="card-glow"></div>
+          <div class="card-ripple-container"></div>
+          <div class="card-icon">💎</div>
+          <h3 class="card-name">藍寶石</h3>
+          <p class="card-desc">守護智慧與真誠<br>帶來平靜的力量</p>
+          <div class="card-aura"></div>
+          <div class="floating-particles"></div>
+        </div>
+      </div>
+
+      <div class="lucky-card" data-element="fire" data-lucky="🔮">
+        <div class="card-inner">
+          <div class="card-glow"></div>
+          <div class="card-ripple-container"></div>
+          <div class="card-icon">🔮</div>
+          <h3 class="card-name">水晶球</h3>
+          <p class="card-desc">洞見未來之謎<br>引領命運之路</p>
+          <div class="card-aura"></div>
+          <div class="floating-particles"></div>
+        </div>
+      </div>
+
+      <div class="lucky-card" data-element="earth" data-lucky="🌿">
+        <div class="card-inner">
+          <div class="card-glow"></div>
+          <div class="card-ripple-container"></div>
+          <div class="card-icon">🌿</div>
+          <h3 class="card-name">翡翠葉</h3>
+          <p class="card-desc">連結大地生機<br>賜予健康活力</p>
+          <div class="card-aura"></div>
+          <div class="floating-particles"></div>
+        </div>
+      </div>
+
+      <div class="lucky-card" data-element="wind" data-lucky="⭐">
+        <div class="card-inner">
+          <div class="card-glow"></div>
+          <div class="card-ripple-container"></div>
+          <div class="card-icon">⭐</div>
+          <h3 class="card-name">星辰石</h3>
+          <p class="card-desc">匯聚星際能量<br>點亮黑暗前途</p>
+          <div class="card-aura"></div>
+          <div class="floating-particles"></div>
+        </div>
+      </div>
+
+      <div class="lucky-card" data-element="moon" data-lucky="🌙">
+        <div class="card-inner">
+          <div class="card-glow"></div>
+          <div class="card-ripple-container"></div>
+          <div class="card-icon">🌙</div>
+          <h3 class="card-name">月光珠</h3>
+          <p class="card-desc">月之柔光庇佑<br>淨化心靈創傷</p>
+          <div class="card-aura"></div>
+          <div class="floating-particles"></div>
+        </div>
+      </div>
+
+      <div class="lucky-card" data-element="sun" data-lucky="☀️">
+        <div class="card-inner">
+          <div class="card-glow"></div>
+          <div class="card-ripple-container"></div>
+          <div class="card-icon">☀️</div>
+          <h3 class="card-name">太陽石</h3>
+          <p class="card-desc">燃燒無盡熱情<br>招來財富豐收</p>
+          <div class="card-aura"></div>
+          <div class="floating-particles"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 許願池區域 -->
+    <section class="wish-section">
+      <div class="wish-pool">
+        <canvas id="poolCanvas"></canvas>
+        <div class="pool-label">🌊 點擊湖面許願 🌊</div>
+        <div class="wish-coins" id="wishCoins"></div>
+      </div>
+      <div class="wish-message" id="wishMessage">
+        <span class="wish-text">投入一枚許願幣，讓幸運物聆聽你的心願…</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 點擊特效層 -->
+  <div class="click-effects-layer" id="clickEffects"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

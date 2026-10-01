@@ -1,0 +1,495 @@
+/* ========================================
+   神秘之湖幸運物 - 樣式表
+   ======================================== */
+
+/* --- 基礎重置 & CSS 變數 --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --water:  #4fc3f7;
+  --fire:   #ce93d8;
+  --earth:  #81c784;
+  --wind:   #fff176;
+  --moon:   #b0bec5;
+  --sun:    #ffb74d;
+
+  --bg-deep:    #050d1a;
+  --bg-mid:     #071628;
+  --glass-bg:   rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --text-main:  #e8f4fd;
+  --text-sub:   #8ab4c9;
+
+  --radius-card: 20px;
+  --shadow-glow: 0 0 30px rgba(79, 195, 247, 0.3);
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  color: var(--text-main);
+  background: var(--bg-deep);
+}
+
+/* --- 全螢幕湖面 Canvas --- */
+#lakeCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* --- 背景粒子層 --- */
+.bg-particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  animation: floatUp var(--dur, 8s) var(--delay, 0s) infinite ease-in-out;
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(0) scale(1);   opacity: 0; }
+  15%  { opacity: var(--max-op, 0.6); }
+  85%  { opacity: var(--max-op, 0.6); }
+  100% { transform: translateY(-100vh) scale(0.3); opacity: 0; }
+}
+
+/* --- 主容器 --- */
+.container {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* --- 標題區 --- */
+.site-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.title {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, #7ecbff, #c8a8ff, #7ecbff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerText 4s linear infinite;
+  text-shadow: none;
+}
+
+@keyframes shimmerText {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.title-icon {
+  display: inline-block;
+  animation: spinBounce 3s ease-in-out infinite;
+}
+.title-icon:last-child { animation-delay: 1.5s; }
+
+@keyframes spinBounce {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25%       { transform: rotate(-15deg) scale(1.2); }
+  75%       { transform: rotate(15deg) scale(1.2); }
+}
+
+.subtitle {
+  margin-top: 12px;
+  font-size: 1rem;
+  color: var(--text-sub);
+  letter-spacing: 2px;
+  animation: fadeInUp 1.2s ease both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================
+   幸運物卡片
+   ======================================== */
+.lucky-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 28px;
+  margin-bottom: 60px;
+}
+
+.lucky-card {
+  position: relative;
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  /* 視差偏移透過 CSS 變數控制，不覆蓋 transform */
+  translate: 0 var(--parallax-y, 0px);
+  transition: translate 0.1s ease;
+  /* 初始進場動畫 */
+  animation: cardReveal 0.8s ease both;
+}
+
+.lucky-card:nth-child(1) { animation-delay: 0.1s; }
+.lucky-card:nth-child(2) { animation-delay: 0.2s; }
+.lucky-card:nth-child(3) { animation-delay: 0.3s; }
+.lucky-card:nth-child(4) { animation-delay: 0.4s; }
+.lucky-card:nth-child(5) { animation-delay: 0.5s; }
+.lucky-card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(40px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 卡片內層（玻璃擬態） */
+.card-inner {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 36px 28px 32px;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              border-color 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+/* 懸停：3D 抬起 */
+.lucky-card:hover .card-inner {
+  transform: translateY(-10px) scale(1.03);
+}
+
+/* 點擊：下壓回彈 */
+.lucky-card:active .card-inner {
+  transform: translateY(-4px) scale(0.98);
+  transition-duration: 0.1s;
+}
+
+/* 元素別邊框顏色（懸停時顯現） */
+.lucky-card[data-element="water"]:hover .card-inner { border-color: var(--water); }
+.lucky-card[data-element="fire"]:hover  .card-inner { border-color: var(--fire);  }
+.lucky-card[data-element="earth"]:hover .card-inner { border-color: var(--earth); }
+.lucky-card[data-element="wind"]:hover  .card-inner { border-color: var(--wind);  }
+.lucky-card[data-element="moon"]:hover  .card-inner { border-color: var(--moon);  }
+.lucky-card[data-element="sun"]:hover   .card-inner { border-color: var(--sun);   }
+
+/* 光暈層（懸停時擴散） */
+.card-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: width 0.5s ease, height 0.5s ease, opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.lucky-card[data-element="water"] .card-glow { background: radial-gradient(circle, rgba(79,195,247,0.25) 0%, transparent 70%); }
+.lucky-card[data-element="fire"]  .card-glow { background: radial-gradient(circle, rgba(206,147,216,0.25) 0%, transparent 70%); }
+.lucky-card[data-element="earth"] .card-glow { background: radial-gradient(circle, rgba(129,199,132,0.25) 0%, transparent 70%); }
+.lucky-card[data-element="wind"]  .card-glow { background: radial-gradient(circle, rgba(255,241,118,0.25) 0%, transparent 70%); }
+.lucky-card[data-element="moon"]  .card-glow { background: radial-gradient(circle, rgba(176,190,197,0.25) 0%, transparent 70%); }
+.lucky-card[data-element="sun"]   .card-glow { background: radial-gradient(circle, rgba(255,183,77,0.25)  0%, transparent 70%); }
+
+.lucky-card:hover .card-glow {
+  width: 400px; height: 400px;
+  opacity: 1;
+}
+
+/* 卡片漣漪容器 */
+.card-ripple-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  pointer-events: none;
+}
+
+/* 圖示 */
+.card-icon {
+  font-size: 3.5rem;
+  display: block;
+  text-align: center;
+  margin-bottom: 16px;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              filter 0.3s ease;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  position: relative;
+  z-index: 2;
+}
+
+.lucky-card:hover .card-icon {
+  transform: scale(1.2) translateY(-4px);
+  filter: drop-shadow(0 8px 24px rgba(255,255,255,0.3));
+}
+
+/* 搖晃動畫（點擊後） */
+.lucky-card.clicked .card-icon {
+  animation: iconShake 0.5s ease;
+}
+
+@keyframes iconShake {
+  0%,100% { transform: scale(1.2) translateY(-4px) rotate(0deg); }
+  20%      { transform: scale(1.3) translateY(-8px) rotate(-12deg); }
+  40%      { transform: scale(1.3) translateY(-8px) rotate(12deg); }
+  60%      { transform: scale(1.25) translateY(-6px) rotate(-6deg); }
+  80%      { transform: scale(1.2) translateY(-4px) rotate(6deg); }
+}
+
+.card-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  text-align: center;
+  line-height: 1.8;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 2;
+}
+
+/* 光環效果（懸停持續旋轉） */
+.card-aura {
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--radius-card) + 2px);
+  background: transparent;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.lucky-card[data-element="water"] .card-aura { box-shadow: 0 0 20px 2px var(--water); }
+.lucky-card[data-element="fire"]  .card-aura { box-shadow: 0 0 20px 2px var(--fire);  }
+.lucky-card[data-element="earth"] .card-aura { box-shadow: 0 0 20px 2px var(--earth); }
+.lucky-card[data-element="wind"]  .card-aura { box-shadow: 0 0 20px 2px var(--wind);  }
+.lucky-card[data-element="moon"]  .card-aura { box-shadow: 0 0 20px 2px var(--moon);  }
+.lucky-card[data-element="sun"]   .card-aura { box-shadow: 0 0 20px 2px var(--sun);   }
+
+.lucky-card:hover .card-aura {
+  opacity: 1;
+  animation: auraPulse 2s ease-in-out infinite;
+}
+
+@keyframes auraPulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+/* 浮動粒子（懸停時生成） */
+.floating-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ========================================
+   漣漪（JS 動態生成）
+   ======================================== */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: rippleExpand 0.7s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes rippleExpand {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ========================================
+   許願池
+   ======================================== */
+.wish-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.wish-pool {
+  position: relative;
+  width: min(500px, 90vw);
+  aspect-ratio: 1 / 0.55;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(79, 195, 247, 0.4);
+  box-shadow: 0 0 40px rgba(79, 195, 247, 0.2),
+              inset 0 0 60px rgba(0, 60, 120, 0.6);
+  cursor: crosshair;
+  transition: box-shadow 0.3s ease;
+}
+
+.wish-pool:hover {
+  box-shadow: 0 0 60px rgba(79, 195, 247, 0.5),
+              inset 0 0 80px rgba(0, 60, 120, 0.7);
+}
+
+#poolCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pool-label {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: rgba(200, 230, 255, 0.7);
+  letter-spacing: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 1; }
+}
+
+.wish-coins {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.wish-coin {
+  position: absolute;
+  font-size: 1.2rem;
+  animation: coinSink 2s ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes coinSink {
+  0%   { transform: translateY(-20px) rotate(0deg) scale(1.2); opacity: 1; }
+  40%  { transform: translateY(30%)   rotate(180deg) scale(0.9); opacity: 0.8; }
+  100% { transform: translateY(120%)  rotate(360deg) scale(0.3); opacity: 0; }
+}
+
+.wish-message {
+  text-align: center;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wish-text {
+  font-size: 1rem;
+  color: var(--text-sub);
+  letter-spacing: 1px;
+  transition: color 0.5s ease, background 0.5s ease,
+              border 0.5s ease, text-shadow 0.5s ease,
+              opacity 0.5s ease, transform 0.5s ease;
+  padding: 8px 20px;
+  border-radius: 30px;
+  display: inline-block;
+  border: 1px solid transparent;
+}
+
+.wish-text.active {
+  color: #c8e6ff;
+  background: rgba(79, 195, 247, 0.1);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  text-shadow: 0 0 12px rgba(79, 195, 247, 0.6);
+}
+
+/* ========================================
+   全域點擊特效層
+   ======================================== */
+.click-effects-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.click-spark {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: sparkFly var(--dur, 0.8s) ease-out forwards;
+}
+
+@keyframes sparkFly {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+.click-burst {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.6);
+  transform: translate(-50%, -50%) scale(0);
+  animation: burstExpand 0.6s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes burstExpand {
+  to { transform: translate(-50%, -50%) scale(1); opacity: 0; width: 100px; height: 100px; }
+}
+
+/* ========================================
+   滾動條樣式
+   ======================================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb {
+  background: rgba(79, 195, 247, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(79, 195, 247, 0.6); }
+
+/* ========================================
+   RWD
+   ======================================== */
+@media (max-width: 600px) {
+  .lucky-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .card-inner { padding: 24px 16px 20px; }
+  .card-icon  { font-size: 2.5rem; }
+  .card-name  { font-size: 1rem; }
+  .card-desc  { font-size: 0.75rem; }
+}
